@@ -22,7 +22,7 @@
         /**
         * @var string secret key
         */
-        protected $secret = '795b2d835de03882252b0788970ad2588ab423b49f0f440bc4a774f9a8571e40';
+        protected $secret = 'brs57d089h3e21508tncv9rsad6bc1f0d2e53v428t71h2esnu6v81624842536u';
 
         /**
         * @var null token
@@ -129,7 +129,16 @@
             }
 
             $tokenPayload = base64_decode($tokenParts[1]);
+
+            if (!isset($tokenParts[2])) {
+                return self::TOKEN_EXPIRED;
+            }
+
             $signatureProvided = $tokenParts[2];
+
+            if (json_decode($tokenPayload) === null) {
+                return self::TOKEN_EXPIRED;
+            }
 
             // Token expired?
             if ($this->isTokenExpired(json_decode($tokenPayload)->exp)) {
