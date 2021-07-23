@@ -10,8 +10,8 @@
             $providers = $request->providers();
 
             $request->isValid = Self::response(
-                providers: $providers,
-                method: $method);
+                $providers,
+                $method);
         }
 
         private static function find(string $path): bool

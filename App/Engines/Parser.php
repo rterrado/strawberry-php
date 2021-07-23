@@ -8,18 +8,16 @@
         {
             $uris = explode("/", $_SERVER["REQUEST_URI"]);
 
-            $providers->response()->gateway(gateway: $uris[2] ?? "invalid");
-            $providers->response()->version(version: $uris[3] ?? "invalid");
-            $providers->service()->name(name: $uris[5] ?? "invalid");
+            $providers->response()->gateway($uris[2] ?? "invalid");
+            $providers->response()->version($uris[3] ?? "invalid");
+            $providers->service()->name($uris[5] ?? "invalid");
         }
 
         protected static function query(Object $query): void
         {
             parse_str($_SERVER["QUERY_STRING"], $data);
             if (!empty($data)) {
-                Self::map (
-                    data: $data,
-                    object: $query );
+                Self::map ($data, $query );
             }
         }
 
@@ -28,22 +26,19 @@
             $body = urldecode(file_get_contents('php://input'));
             $data = json_decode($body, true);
             if ( json_last_error() === JSON_ERROR_NONE ) {
-                Self::map (
-                    data: $data,
-                    object: $payload
-                );
+                Self::map ($data, $payload);
                 $payload->isEmpty = false;
                 return;
             }
 
             $bodyPairs = explode("&", $body);
+
             foreach ($bodyPairs as $bodyPair) {
                 $keyVal = explode("=", $bodyPair);
-                if ( ! isset ( $keyVal[1] ) ){
-                    $payload->isEmpty = true;
-                    return;
+                if (isset($keyVal[1])){
+                    $tmp = $keyVal[0];
+                    $payload->$tmp = htmlspecialchars($keyVal[1]);
                 }
-                $payload->$keyVal[0] = htmlspecialchars($keyVal[1]);
             }
 
             return;

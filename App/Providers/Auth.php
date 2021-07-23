@@ -8,14 +8,11 @@
 
     class Auth extends Validate {
 
-        public static function create($userID, $role): string
+        public static function create(array $payload): string
         {
             $generate = new Token();
-            $token = $generate->setPayload([
-                'user_id' => $userID,
-                'role' => $role,
-                'exp' => ((new \DateTime())->modify('+30 minutes')->getTimestamp())
-            ])->generateToken();
+            $payload['exp'] = ((new \DateTime())->modify('+10 minutes')->getTimestamp());
+            $token = $generate->setPayload($payload)->generateToken();
             return $token;
         }
 
