@@ -16,48 +16,67 @@
             $this->request = new Request;
         }
 
-        public function boot(): void
-        {
-            Boot::method( request: $this->request );
-            Boot::meta( providers: $this->request->providers() );
-            Boot::query( query: $this->request->query() );
-            Boot::payload( payload: $this->request->payload() );
-            Boot::files( files: $this->request->files() );
+        /**
+         * Boots the application
+         * @return void
+         * @since v1.0.0
+         */
+        public function boot(): void {
+            Boot::method( $this->request );
+            Boot::meta( $this->request->providers() );
+            Boot::query( $this->request->query() );
+            Boot::payload( $this->request->payload() );
+            Boot::files( $this->request->files() );
         }
 
+        /**
+         * Validates the request
+         * @return void
+         * @since v1.0.0
+         */
         public function validate(): void {
-            Validate::providers( request: $this->request );
+            Validate::providers( $this->request );
         }
 
+        /**
+         * Authenticates the request
+         * @return void
+         * @since v1.0.0
+         */
         public function authenticate(): void {
-            Auth::request( request: $this->request );
+            Auth::request( $this->request );
         }
 
+        /**
+         * Serves the request
+         * @return void
+         * @since v1.0.0
+         */
         public function serve(): void {
-
-            if (!$this->request->isValid) {
+            if ( ! $this->request->isValid ) {
                 ResponseSchema::abort(
-                    exception:"Exception::Response Provider does not exist",
-                    time: true );
+                    "Exception::Response Provider does not exist",
+                    400,
+                    true);
                 return;
             }
 
-            if (!$this->request->isProceed) {
+            if ( ! $this->request->isProceed ) {
                 ResponseSchema::abort(
-                    exception:"Unauthorized",
-                    code: 401,
-                    time: true );
+                    "Unauthorized",
+                    401,
+                    true);
                 return;
             }
 
             try {
-                \ResponseProvider::render($this->request, $this->request->isAuth);
+                \ResponseProvider::render ( $this->request, $this->request->isAuth );
             }
             catch (\Exception $e) {
                 ResponseSchema::abort(
-                    exception:"Exception::Server Error: ".$e->getMessage(),
-                    code: 500,
-                    time: true );
+                    "Exception::Server Error: ".$e->getMessage(),
+                    500,
+                    true);
             }
 
         }
