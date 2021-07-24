@@ -7,12 +7,12 @@
 
     class ResponseProvider implements \App\Providers\Responses\ResponseProviderInterface {
 
-        public const REQUIRES_AUTH = true;
+        public const REQUIRES_AUTH = false;
         public const PERMISSION    = "WEB";
 
         public static function render(Request $request, bool $isAuth)
         {
-            
+            echo "Hello worldsss!";
         }
 
     }
