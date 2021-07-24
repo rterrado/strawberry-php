@@ -27,14 +27,14 @@
             $service  = $providers->service()->name();
             $provider = $service.".".$method.".php";
 
-            $path = Self::build(["Responses", $gateway, $version, $provider]);
+            $path = Self::build([$gateway, $version, $provider]);
             $providers->response()->register($path);
             return Self::find($path);
         }
 
         private static function build(array $directories): string
         {
-            $path = $_SERVER["DOCUMENT_ROOT"]."/App/Providers";
+            $path = $_SERVER["DOCUMENT_ROOT"];
             foreach ($directories as $directory) {
                 $path = $path."/".$directory;
             }
